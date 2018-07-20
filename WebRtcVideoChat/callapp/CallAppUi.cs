@@ -194,7 +194,8 @@ public class CallAppUi : MonoBehaviour
         mApp.SetVideoDevice(GetSelectedVideoDevice());
 
         //Set true to allow sending video and audio to other connections
-        mApp.SetAudio(false);
+        mApp.SetAudio(true);
+        mApp.SetRemoteVolume(1);
         mApp.SetVideo(false);
 
         int width = TryParseInt(uIdealWidth.text, 320);

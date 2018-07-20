@@ -2426,6 +2426,18 @@ Prefab:
       propertyPath: m_Intensity
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1757980856723958, guid: 6c30705a3f5465b44a3a0d9afb29b417, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1317346944047806, guid: 6c30705a3f5465b44a3a0d9afb29b417, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1785195739527908, guid: 6c30705a3f5465b44a3a0d9afb29b417, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c30705a3f5465b44a3a0d9afb29b417, type: 2}
   m_IsPrefabParent: 0
