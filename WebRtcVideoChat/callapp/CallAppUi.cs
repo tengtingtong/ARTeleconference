@@ -64,6 +64,8 @@ public class CallAppUi : MonoBehaviour
     /// </summary>
     public RawImage uRemoteVideoImage;
     public Transform uMainCamera;
+    public Slider uBrightnessThresholdSlider;
+    public Text uLightEstimationValue;
 
     [Header("Resources")]
     public Texture2D uNoCameraTexture;
@@ -73,8 +75,9 @@ public class CallAppUi : MonoBehaviour
     public GameObject FloatingPlaneRightDir;
     public Shader mChromaKeyShader;
 
-    protected bool mFullscreen = false;
+    private Text uBrightnessText;
 
+    protected bool mFullscreen = false;
 
     protected CallApp mApp;
 
@@ -117,6 +120,7 @@ public class CallAppUi : MonoBehaviour
 
     protected virtual void Start()
     {
+        uBrightnessText = uBrightnessThresholdSlider.GetComponentInChildren<Text>();
         uBackButton.interactable = false;
     }
 
@@ -230,10 +234,6 @@ public class CallAppUi : MonoBehaviour
                 FloatingPlaneLeft.GetComponent<Renderer>().material.mainTextureScale = new Vector2(0.5f, 1);
                 FloatingPlaneRight.GetComponent<Renderer>().material.mainTextureScale = new Vector2(0.5f, 1);
                 FloatingPlaneRight.GetComponent<Renderer>().material.mainTextureOffset = new Vector2(0.5f, 0);
-                
-
-                //FloatingPlaneLeft.gameObject.transform.Rotate(0, 0, 180);
-                //FloatingPlaneRight.gameObject.transform.Rotate(0, 0, 180);
 
 
                 mHasRemoteVideo = true;
@@ -377,11 +377,23 @@ public class CallAppUi : MonoBehaviour
         uBackButton.interactable = false;
     }
 
+    public void LightThresholdValueChanged()
+    {
+        uBrightnessText.text = uBrightnessThresholdSlider.value.ToString();
+        Shader.SetGlobalFloat("_BrightnessThreshold", uBrightnessThresholdSlider.value);
+    }
+
     
     protected virtual void Update()
     {
+        //Let's Planes always show us at any orientation
         FloatingPlaneLeftDir.gameObject.transform.LookAt(uMainCamera);
         FloatingPlaneRightDir.gameObject.transform.LookAt(uMainCamera);
+
+        //Read for LightEstimationValue
+        uLightEstimationValue.text = Shader.GetGlobalFloat("_GlobalLightEstimation").ToString();
+
+        //Implement in video texture
         if (mVideoOverlayTimeout > 0)
         { 
             string remote = "Remote:";

@@ -22,7 +22,6 @@ namespace GoogleARCore
 {
     using UnityEngine;
     using UnityEngine.Rendering;
-
     /// <summary>
     /// A component that automatically adjust lighting settings for the scene
     /// to be inline with those estimated by ARCore.
@@ -66,9 +65,9 @@ namespace GoogleARCore
                 float a = (b + 1.0f) / b * linearRampThreshold;
                 colorScale = a * (1.0f - (1.0f / ((b * normalizedIntensity) + 1.0f)));
             }
-
             Shader.SetGlobalFloat("_GlobalLightEstimation", colorScale);
 #endif
+            
         }
     }
 }

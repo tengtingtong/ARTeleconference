@@ -21,6 +21,7 @@
 	float _Sensitivity;
 	float _Smooth;
 	fixed _GlobalLightEstimation;
+	fixed _BrightnessThreshold;
 
 
 	void lightEstimation(Input IN, SurfaceOutput o, inout fixed4 color)
@@ -41,8 +42,8 @@
 
 		float blendValue = smoothstep(_Sensitivity, _Sensitivity + _Smooth, distance(float2(Cr, Cb), float2(maskCr, maskCb)));
 		o.Albedo = c.rgb;
-		o.Alpha = 1.0 * blendValue - 0.5f;
-		o.Emission = c.rgb * blendValue;
+		o.Alpha = 1.0 * blendValue * _BrightnessThreshold;
+		o.Emission = c.rgb * blendValue * 0.5f;
 	}
 	ENDCG
 	}
