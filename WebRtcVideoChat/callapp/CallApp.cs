@@ -124,8 +124,6 @@ public class CallApp : MonoBehaviour
     {
         mUi.SetGuiState(true);
 
-        //fill the video dropbox
-        mUi.UpdateVideoDropdown();
     }
 
     private void OnDestroy()

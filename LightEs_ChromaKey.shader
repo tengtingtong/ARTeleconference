@@ -2,6 +2,7 @@
 	Properties{
 		_MainTex("Base (RGB)", 2D) = "white" {}
 		_MaskCol("Mask Color", Color) = (0, 0.6823, 0.2862, 1.0)
+		_MainColor("Main Color", Color) = (0, 0, 0, 0)
 		_Sensitivity("Threshold Sensitivity", Range(0,1)) = 0.23
 		_Smooth("Smoothing", Range(0,1)) = 0.02
 	}
@@ -18,6 +19,7 @@
 
 	sampler2D _MainTex;
 	float4 _MaskCol;
+	float4 _MainColor;
 	float _Sensitivity;
 	float _Smooth;
 	fixed _GlobalLightEstimation;
@@ -41,7 +43,7 @@
 		float Cb = 0.5647 * (c.b - Y);
 
 		float blendValue = smoothstep(_Sensitivity, _Sensitivity + _Smooth, distance(float2(Cr, Cb), float2(maskCr, maskCb)));
-		o.Albedo = c.rgb;
+		o.Albedo = _MainColor;
 		o.Alpha = 1.0 * blendValue * _BrightnessThreshold;
 		o.Emission = c.rgb * blendValue * 0.5f;
 	}

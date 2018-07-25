@@ -4,7 +4,6 @@
  * Please refer to the LICENSE file for license information
  */
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
@@ -49,25 +48,18 @@ public class CallAppUi : MonoBehaviour
     public RectTransform uSetupPanel;
     public InputField uRoomNameInputField;
     public Button uJoinButton;
-    public Dropdown uDeviceDropdown;
-    public InputField uIdealWidth;
-    public InputField uIdealHeight;
-    public InputField uIdealFps;
     public Toggle uRejoinToggle;
     public Button uHolokitButton;
     public Button uBackButton;
+    public Slider uVolumeSlider;
 
-
-    [Header("Video panel elements")]
-    /// <summary>
-    /// Image of the remote camera
-    /// </summary>
+    [Header("HolokitUi")]
     public RawImage uRemoteVideoImage;
     public Transform uMainCamera;
     public Slider uBrightnessThresholdSlider;
     public Text uLightEstimationValue;
 
-    [Header("Resources")]
+    [Header("InHolokitMode")]
     public Texture2D uNoCameraTexture;
     public GameObject FloatingPlaneLeft;
     public GameObject FloatingPlaneLeftDir;
@@ -103,9 +95,6 @@ public class CallAppUi : MonoBehaviour
     private string mPrefix = "CallAppUI_";
     private static readonly string PREF_VIDEODEVICE = "videodevice";
     private static readonly string PREF_ROOMNAME = "roomname";
-    private static readonly string PREF_IDEALWIDTH = "idealwidth";
-    private static readonly string PREF_IDEALHEIGHT = "idealheight";
-    private static readonly string PREF_IDEALFPS = "idealfps";
     private static readonly string PREF_REJOIN = "rejoin";
 
     private bool isInHolokitMode = false;
@@ -127,11 +116,7 @@ public class CallAppUi : MonoBehaviour
 
     private void SaveSettings()
     {
-        PlayerPrefs.SetString(mPrefix + PREF_VIDEODEVICE, GetSelectedVideoDevice());
         PlayerPrefs.SetString(mPrefix + PREF_ROOMNAME, uRoomNameInputField.text);
-        PlayerPrefs.SetString(mPrefix + PREF_IDEALWIDTH, uIdealWidth.text);
-        PlayerPrefs.SetString(mPrefix + PREF_IDEALHEIGHT, uIdealHeight.text);
-        PlayerPrefs.SetString(mPrefix + PREF_IDEALFPS, uIdealFps.text);
         PlayerPrefsSetBool(mPrefix + PREF_REJOIN, uRejoinToggle.isOn);
         PlayerPrefs.Save();
     }
@@ -147,9 +132,6 @@ public class CallAppUi : MonoBehaviour
         //can't select this immediately because we don't know if it is valid yet
         mStoredVideoDevice = PlayerPrefs.GetString(mPrefix + PREF_VIDEODEVICE, null);
         uRoomNameInputField.text = PlayerPrefs.GetString(mPrefix + PREF_ROOMNAME, uRoomNameInputField.text);
-        uIdealWidth.text = PlayerPrefs.GetString(mPrefix + PREF_IDEALWIDTH, "320");
-        uIdealHeight.text = PlayerPrefs.GetString(mPrefix + PREF_IDEALHEIGHT, "240");
-        uIdealFps.text = PlayerPrefs.GetString(mPrefix + PREF_IDEALFPS, "30");
         uRejoinToggle.isOn = PlayerPrefsGetBool(mPrefix + PREF_REJOIN, false);
     }
 
@@ -166,19 +148,6 @@ public class CallAppUi : MonoBehaviour
         PlayerPrefs.SetInt(name, value ? 1 : 0);
     }
 
-    private string GetSelectedVideoDevice()
-    {
-        if (uDeviceDropdown.value <= 0 || uDeviceDropdown.value >= uDeviceDropdown.options.Count)
-        {
-            return null;
-        }
-        else
-        {
-            string devname = uDeviceDropdown.options[uDeviceDropdown.value].text;
-            return devname;
-        }
-    }
-
     private static int TryParseInt(string value, int defval)
     {
         int result;
@@ -191,18 +160,12 @@ public class CallAppUi : MonoBehaviour
 
     private void SetupCallApp()
     {
-        mApp.SetVideoDevice(GetSelectedVideoDevice());
-
         //Set true to allow sending video and audio to other connections
         mApp.SetAudio(true);
+        mApp.SetLoudspeakerStatus(true);
         mApp.SetRemoteVolume(1);
         mApp.SetVideo(false);
 
-        int width = TryParseInt(uIdealWidth.text, 320);
-        int height = TryParseInt(uIdealHeight.text, 240);
-        int fps = TryParseInt(uIdealFps.text, 320);
-        mApp.SetIdealResolution(width, height);
-        mApp.SetIdealFps(fps);
         mApp.SetAutoRejoin(uRejoinToggle.isOn);
         mApp.SetupCall();
         EnsureLength();
@@ -257,26 +220,6 @@ public class CallAppUi : MonoBehaviour
     /// <summary>
     /// Updates the dropdown menu based on the current video devices and toggle status
     /// </summary>
-    public void UpdateVideoDropdown()
-    {
-        uDeviceDropdown.ClearOptions();
-        uDeviceDropdown.AddOptions(new List<string>(mApp.GetVideoDevices()));
-        uDeviceDropdown.interactable = mApp.CanSelectVideoDevice();
-
-        //restore the stored selection if possible
-        if(uDeviceDropdown.interactable  && mStoredVideoDevice != null)
-        {
-            int index = 0;
-            foreach(var opt in uDeviceDropdown.options)
-            {
-                if(opt.text == mStoredVideoDevice)
-                {
-                    uDeviceDropdown.value = index;
-                }
-                index++;
-            }
-        }
-    }
     public void VideoDropdownOnValueChanged(int index)
     {
         //moved to SetupCallApp
@@ -305,11 +248,7 @@ public class CallAppUi : MonoBehaviour
         uHolokitButton.interactable = !showSetup;
 
         uRoomNameInputField.interactable = showSetup;
-        uDeviceDropdown.interactable = showSetup;
         uRejoinToggle.interactable = showSetup;
-        uIdealWidth.interactable = showSetup;
-        uIdealHeight.interactable = showSetup;
-        uIdealFps.interactable = showSetup;
 
         if (showSetup)
         {
@@ -382,6 +321,11 @@ public class CallAppUi : MonoBehaviour
     {
         uBrightnessText.text = uBrightnessThresholdSlider.value.ToString();
         Shader.SetGlobalFloat("_BrightnessThreshold", uBrightnessThresholdSlider.value);
+    }
+
+    public void OnVolumeChanged()
+    {
+        mApp.SetRemoteVolume(uVolumeSlider.value);
     }
 
     

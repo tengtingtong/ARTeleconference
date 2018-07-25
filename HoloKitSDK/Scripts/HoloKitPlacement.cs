@@ -60,7 +60,8 @@ namespace HoloKit
 
                 if (holder.activeSelf)
                 {
-                    holder.transform.position = rayHit.point;
+                    holder.transform.position = rayHit.point + new Vector3(0, 0, 0.2f);
+                    
                     if (isRotateToCamera)
                     {
                         Quaternion lookRotation = camera.transform.rotation;

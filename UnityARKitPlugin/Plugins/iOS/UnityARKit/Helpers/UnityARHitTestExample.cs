@@ -40,6 +40,7 @@ namespace UnityEngine.XR.iOS
 
 					//and the rotation from the transform of the plane collider
 					m_HitTransform.rotation = hit.transform.rotation;
+                    Debug.DrawLine(ray.origin, hit.point, Color.green);
 				}
 			}
 			#else
