@@ -111,6 +111,7 @@ public class CallAppUi : MonoBehaviour
     {
         uBrightnessText = uBrightnessThresholdSlider.GetComponentInChildren<Text>();
         uBackButton.interactable = false;
+        uBrightnessThresholdSlider.interactable = false;
     }
 
 
@@ -191,14 +192,11 @@ public class CallAppUi : MonoBehaviour
                 //Implement Video texture in Holokit mode
                 FloatingPlaneLeft.GetComponent<Renderer>().material.mainTexture = mRemoteVideoTexture;
                 FloatingPlaneRight.GetComponent<Renderer>().material.mainTexture = mRemoteVideoTexture;
-                FloatingPlaneLeft.GetComponent<Renderer>().material.shader = mChromaKeyShader;
-                FloatingPlaneRight.GetComponent<Renderer>().material.shader = mChromaKeyShader;
 
                 //Shift texture for Lefteye_plane & Righteye_plane
                 FloatingPlaneLeft.GetComponent<Renderer>().material.mainTextureScale = new Vector2(0.5f, 1);
                 FloatingPlaneRight.GetComponent<Renderer>().material.mainTextureScale = new Vector2(0.5f, 1);
                 FloatingPlaneRight.GetComponent<Renderer>().material.mainTextureOffset = new Vector2(0.5f, 0);
-
 
                 mHasRemoteVideo = true;
                 mRemoteVideoWidth = frame.Width;
@@ -302,6 +300,7 @@ public class CallAppUi : MonoBehaviour
         uSetupPanel.gameObject.SetActive(!uSetupPanel.gameObject.activeSelf);
         isInHolokitMode = true;
         uBackButton.interactable = true;
+        uBrightnessThresholdSlider.interactable = true;
     }
 
     /// <summary>
@@ -315,6 +314,7 @@ public class CallAppUi : MonoBehaviour
         joinButtonState = true;
         isInHolokitMode = false;
         uBackButton.interactable = false;
+        uBrightnessThresholdSlider.interactable = false;
     }
 
     public void LightThresholdValueChanged()
