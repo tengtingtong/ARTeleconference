@@ -109,6 +109,7 @@ public class CallAppUi : MonoBehaviour
 
     protected virtual void Start()
     {
+        Shader.SetGlobalFloat("_BrightnessThreshold", 1);
         uBrightnessText = uBrightnessThresholdSlider.GetComponentInChildren<Text>();
         uBackButton.interactable = false;
         uBrightnessThresholdSlider.interactable = false;
