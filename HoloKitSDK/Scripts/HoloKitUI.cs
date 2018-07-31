@@ -7,10 +7,7 @@ namespace HoloKit
 {
     public class HoloKitUI : MonoBehaviour
     {
-        [SerializeField]
-        private Button bHoloKitModel;
-        [SerializeField]
-        private Text tHoloKitModel;
+
         [SerializeField]
         private string textHoloKit1 = "v1";
         [SerializeField]
@@ -33,13 +30,11 @@ namespace HoloKit
         private void OnEnable()
         {
             bSeeMode.onClick.AddListener(WhenButtonSeeMode);
-            bHoloKitModel.onClick.AddListener(WhenButtonHoloKitModel);
         }
 
         private void OnDisable()
         {
             bSeeMode.onClick.RemoveListener(WhenButtonSeeMode);
-            bHoloKitModel.onClick.RemoveListener(WhenButtonHoloKitModel);
         }
 
         private void Start()
@@ -56,25 +51,14 @@ namespace HoloKit
                     case CameraType.AR:
                         tSeeMode.text = textAR;
                         splitter.gameObject.SetActive(false);
-                        bHoloKitModel.gameObject.SetActive(false);
                         break;
                     case CameraType.MR:
                         tSeeMode.text = textMR;
                         splitter.gameObject.SetActive(true);
-                        bHoloKitModel.gameObject.SetActive(true);
                         break;
                 }
                 oldSeeMode = HoloKitCamera.Instance.cameraType;
 
-                switch (HoloKitCamera.Instance.profileModel)
-                {
-                    case Profile.ModelType.HoloKitApple:
-                        tHoloKitModel.text = textHoloKitApple;
-                        break;
-                    default:
-                        tHoloKitModel.text = textHoloKit1;
-                        break;
-                }
                 oldHoloKitModel = HoloKitCamera.Instance.profileModel;
             }
         }
