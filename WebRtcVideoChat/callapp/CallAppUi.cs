@@ -58,6 +58,7 @@ public class CallAppUi : MonoBehaviour
     public Transform uMainCamera;
     public Slider uBrightnessThresholdSlider;
     public Text uLightEstimationValue;
+    public Button bSeeMode;
 
     [Header("InHolokitMode")]
     public Texture2D uNoCameraTexture;
@@ -111,8 +112,7 @@ public class CallAppUi : MonoBehaviour
     {
         Shader.SetGlobalFloat("_BrightnessThreshold", 1);
         uBrightnessText = uBrightnessThresholdSlider.GetComponentInChildren<Text>();
-        uBackButton.interactable = false;
-        uBrightnessThresholdSlider.interactable = false;
+        HolokitUiStatus(false);
     }
 
 
@@ -300,8 +300,7 @@ public class CallAppUi : MonoBehaviour
     {
         uSetupPanel.gameObject.SetActive(!uSetupPanel.gameObject.activeSelf);
         isInHolokitMode = true;
-        uBackButton.interactable = true;
-        uBrightnessThresholdSlider.interactable = true;
+        HolokitUiStatus(true);
     }
 
     /// <summary>
@@ -314,16 +313,32 @@ public class CallAppUi : MonoBehaviour
         mApp.ResetCall();
         joinButtonState = true;
         isInHolokitMode = false;
-        uBackButton.interactable = false;
-        uBrightnessThresholdSlider.interactable = false;
+        HolokitUiStatus(false);
     }
 
+    /// <summary>
+    /// To Hide/Show HolkitUi when switch mode 
+    /// </summary>
+    public void HolokitUiStatus(bool status)
+    {
+        bSeeMode.gameObject.SetActive(status);
+        uBackButton.gameObject.SetActive(status);
+        uLightEstimationValue.gameObject.SetActive(status);
+        uBrightnessThresholdSlider.gameObject.SetActive(status);
+    }
+
+    /// <summary>
+    /// Listener of Brightness Threshold Slider
+    /// </summary>
     public void LightThresholdValueChanged()
     {
         uBrightnessText.text = uBrightnessThresholdSlider.value.ToString();
         Shader.SetGlobalFloat("_BrightnessThreshold", uBrightnessThresholdSlider.value);
     }
 
+    /// <summary>
+    /// Listener of Volume Slider
+    /// </summary>
     public void OnVolumeChanged()
     {
         mApp.SetRemoteVolume(uVolumeSlider.value);
